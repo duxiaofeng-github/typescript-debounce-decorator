@@ -1,0 +1,26 @@
+{
+  "name": "typescript-debounce-decorator",
+  "version": "0.0.1",
+  "description": "a debounce decorator for typescript function",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsc && ava --verbose && rm test.js",
+    "build": "./node_modules/.bin/rollup -c"
+  },
+  "keywords": [
+    "typescript",
+    "debounce",
+    "decorator",
+    "typescript-debounce-decorator"
+  ],
+  "author": "duxiaofeng-github",
+  "license": "MIT",
+  "typed": "index.d.ts",
+  "devDependencies": {
+    "ava": "^0.24.0",
+    "rollup": "^0.53.3",
+    "rollup-plugin-typescript": "^0.8.1",
+    "rollup-plugin-uglify": "^2.0.1",
+    "typescript": "^2.6.2"
+  }
+}
