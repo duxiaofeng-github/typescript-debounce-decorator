@@ -1,5 +1,9 @@
 # typescript-debounce-decorator
-A debounce decorator for typescript class method
+[![NPM version][npm-image]][npm-url]
+[![NPM downloads][downloads-image]][downloads-url]
+[![Build status][travis-image]][travis-url]
+
+> A debounce decorator for typescript class method
 
 * Tiny (942 bytes after uglify compressed)
 * No dependency
