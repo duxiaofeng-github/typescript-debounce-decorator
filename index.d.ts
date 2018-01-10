@@ -1,5 +1,9 @@
+export interface IDebounceOptions {
+	leading: boolean;
+}
+
 export interface IDebounceFactory {
-	(debounceTime: number): (target: Object, propertyKey: string, descriptor?: PropertyDescriptor) => void;
+	(debounceTime: number, options?: IDebounceOptions): (target: Object, propertyKey: string, descriptor?: PropertyDescriptor) => void;
 	(target: Object, propertyKey: string, descriptor?: PropertyDescriptor): void;
 }
 

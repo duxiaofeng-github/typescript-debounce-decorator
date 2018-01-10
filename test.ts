@@ -38,7 +38,7 @@ async function debounceWithTime() {
 	class Foo {
 
 		@debounce(debounceTime)
-		static  bar() {
+		static bar() {
 			triggerTimes+=1;
 		}
 
@@ -57,4 +57,46 @@ async function debounceWithTime() {
 
 test('test debounce with time', async (t) => {
 	t.is(await debounceWithTime(), resolveTime / debounceTime);
+});
+
+let trueLeadingTriggerTimes = 0;
+
+async function debounceWithTrueLeading() {
+	class Foo {
+
+		@debounce(debounceTime, {leading: true})
+		static bar() {
+			trueLeadingTriggerTimes+=1;
+		}
+
+	}
+
+	Foo.bar();
+}
+
+test('test debounce with true leading', async (t) => {
+	debounceWithTrueLeading();
+
+	t.is(trueLeadingTriggerTimes, 1);
+});
+
+let falseLeadingTriggerTimes = 0;
+
+async function debounceWithFalseLeading() {
+	class Foo {
+
+		@debounce(debounceTime, {leading: false})
+		static bar() {
+			falseLeadingTriggerTimes+=1;
+		}
+
+	}
+
+	Foo.bar();
+}
+
+test('test debounce with false leading', async (t) => {
+	debounceWithFalseLeading();
+
+	t.is(falseLeadingTriggerTimes, 0);
 });
