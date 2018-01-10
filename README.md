@@ -10,14 +10,14 @@
 * Easy to use
 
 ## Install
-```
+```sh
 npm install typescript-debounce-decorator --save
 ```
 
 ## Usage
 
 Basic usage:
-```
+```sh
 import {debounce} from "./index";
 
 class Foo {
@@ -31,7 +31,7 @@ class Foo {
 ```
 
 With debounce time(milliseconds):
-```
+```sh
 import {debounce} from "./index";
 
 class Foo {
