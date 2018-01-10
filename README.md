@@ -27,8 +27,6 @@ Params:
 
 > NOTE: Return value of function which applied debounce decorator will be eaten.
 
----
-
 Basic usage:
 ```typescript
 import {debounce} from "typescript-debounce-decorator";
@@ -43,8 +41,6 @@ class Foo {
 }
 ```
 
----
-
 With debounce time:
 ```typescript
 import {debounce} from "typescript-debounce-decorator";
@@ -58,8 +54,6 @@ class Foo {
 
 }
 ```
-
----
 
 With options:
 ```typescript
