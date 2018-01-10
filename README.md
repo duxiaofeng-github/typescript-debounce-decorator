@@ -23,7 +23,7 @@ import {debounce} from "./index";
 class Foo {
 
 	@debounce
-	static bar() {
+	bar() {
 		console.log('foobar');
 	}
 
@@ -37,7 +37,7 @@ import {debounce} from "./index";
 class Foo {
 
 	@debounce(1000)
-	static bar() {
+	bar() {
 		console.log('foobar');
 	}
 
