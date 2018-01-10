@@ -10,7 +10,9 @@
 * Easy to use
 
 ## Install
-`npm install typescript-debounce-decorator --save`
+```
+npm install typescript-debounce-decorator --save
+```
 
 ## Usage
 
