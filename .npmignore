@@ -64,3 +64,6 @@ tsconfig.json
 .editorconfig
 .gitignore
 src
+.idea
+.rpt2_cache
+.travis.yml
