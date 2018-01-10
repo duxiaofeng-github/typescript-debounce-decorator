@@ -44,3 +44,10 @@ class Foo {
 
 # License
 MIT
+
+[npm-image]: https://img.shields.io/npm/v/typescript-debounce-decorator.svg?style=flat
+[npm-url]: https://npmjs.org/package/typescript-debounce-decorator
+[downloads-image]: https://img.shields.io/npm/dm/typescript-debounce-decorator.svg?style=flat
+[downloads-url]: https://npmjs.org/package/typescript-debounce-decorator
+[travis-image]: https://img.shields.io/travis/duxiaofeng-github/typescript-debounce-decorator.svg?style=flat
+[travis-url]: https://travis-ci.org/duxiaofeng-github/typescript-debounce-decorator

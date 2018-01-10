@@ -1,7 +1,15 @@
 {
   "name": "typescript-debounce-decorator",
   "version": "0.0.1",
-  "description": "a debounce decorator for typescript function",
+  "description": "A debounce decorator for typescript class method",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/duxiaofeng-github/typescript-debounce-decorator.git"
+	},
+	"bugs": {
+		"url": "https://github.com/duxiaofeng-github/typescript-debounce-decorator/issues"
+	},
+	"homepage": "https://github.com/duxiaofeng-github/typescript-debounce-decorator#readme",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/tsc && ./node_modules/.bin/ava --verbose && rm -f test.js src/index.js",
