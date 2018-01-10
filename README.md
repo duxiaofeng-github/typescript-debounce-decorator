@@ -1,9 +1,9 @@
 # typescript-debounce-decorator
 A debounce decorator for typescript class method
 
-* tiny
-* no dependency
-* easy to use
+* Tiny (942 bytes after uglify compressed)
+* No dependency
+* Easy to use
 
 ## Install
 `npm install typescript-debounce-decorator --save`
@@ -11,6 +11,7 @@ A debounce decorator for typescript class method
 ## Usage
 
 Basic usage:
+
 `
 import {debounce} from "./index";
 
@@ -25,6 +26,7 @@ class Foo {
 `
 
 With debounce time(milliseconds):
+
 `
 import {debounce} from "./index";
 
