@@ -5,7 +5,7 @@
 
 > A debounce decorator for typescript class method
 
-* Tiny (993 bytes after uglify compressed)
+* Tiny (1KB after uglify compressed)
 * No dependency
 * Easy to use
 
