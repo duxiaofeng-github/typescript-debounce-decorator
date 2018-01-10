@@ -5,7 +5,7 @@
 
 > A debounce decorator for typescript class method
 
-* Tiny (942 bytes after uglify compressed)
+* Tiny (993 bytes after uglify compressed)
 * No dependency
 * Easy to use
 
@@ -15,6 +15,19 @@ npm install typescript-debounce-decorator --save
 ```
 
 ## Usage
+
+Syntax:
+```typescript
+@debounce(debounceTime, options)
+```
+Params:
+- debounceTime: `number` Function execute interval in milliseconds.
+- options: `object` Options.
+  - leading: `boolean` Should function invoke on the leading or trailing of the wait timeout.
+
+> NOTE: Return value of function which applied debounce decorator will be eaten.
+
+---
 
 Basic usage:
 ```typescript
@@ -30,13 +43,31 @@ class Foo {
 }
 ```
 
-With debounce time(milliseconds):
+---
+
+With debounce time:
 ```typescript
 import {debounce} from "typescript-debounce-decorator";
 
 class Foo {
 
 	@debounce(1000)
+	bar() {
+		console.log('foobar');
+	}
+
+}
+```
+
+---
+
+With options:
+```typescript
+import {debounce} from "typescript-debounce-decorator";
+
+class Foo {
+
+	@debounce(1000, {leading: false})
 	bar() {
 		console.log('foobar');
 	}
