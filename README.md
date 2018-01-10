@@ -11,8 +11,7 @@ A debounce decorator for typescript class method
 ## Usage
 
 Basic usage:
-
-`
+```
 import {debounce} from "./index";
 
 class Foo {
@@ -23,11 +22,10 @@ class Foo {
 	}
 
 }
-`
+```
 
 With debounce time(milliseconds):
-
-`
+```
 import {debounce} from "./index";
 
 class Foo {
@@ -38,7 +36,7 @@ class Foo {
 	}
 
 }
-`
+```
 
 # License
 MIT
