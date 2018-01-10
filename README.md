@@ -17,7 +17,7 @@ npm install typescript-debounce-decorator --save
 ## Usage
 
 Basic usage:
-```sh
+```typescript
 import {debounce} from "./index";
 
 class Foo {
@@ -31,7 +31,7 @@ class Foo {
 ```
 
 With debounce time(milliseconds):
-```sh
+```typescript
 import {debounce} from "./index";
 
 class Foo {
