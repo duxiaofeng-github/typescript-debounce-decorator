@@ -16,7 +16,6 @@ function createDebounce(debounceTime: number, ...args: any[]) {
 			return originalMethod.apply(this, rewriteArgs);
 		} else if (timeStart + debounceTime <= now) {
 			timeStart = undefined;
-			return originalMethod.apply(this, rewriteArgs);
 		}
 	};
 
