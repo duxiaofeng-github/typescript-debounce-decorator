@@ -4,7 +4,7 @@
   "description": "a debounce decorator for typescript function",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/tsc && ./node_modules/.bin/ava --verbose && rm test.js",
+    "test": "./node_modules/.bin/tsc && ./node_modules/.bin/ava --verbose && rm -f test.js src/index.js",
     "build": "rm -f index.js && ./node_modules/.bin/rollup -c"
   },
   "keywords": [
