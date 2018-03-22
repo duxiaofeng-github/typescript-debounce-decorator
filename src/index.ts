@@ -3,7 +3,7 @@ function createDebounce(debounceTime: number, leading: boolean, ...args: any[]) 
 	if (args.length === 1) throw new Error('method applied debounce decorator should have valid name');
 
 	const target = args[0], name = args[1];
-	const descriptor = args.length === 3 ? args[2] : Object.getOwnPropertyDescriptor(target, name);
+	const descriptor = args.length === 3 && args[2] ? args[2] : Object.getOwnPropertyDescriptor(target, name);
 
 	const originalMethod = descriptor.value;
 
@@ -43,9 +43,6 @@ export function debounce(...opts: any[]) {
 		if (typeof opts[0] === 'object' && opts[0].leading !== undefined) options = opts[0];
 		if (opts.length > 1 && typeof opts[1] === 'object' && opts[1].leading !== undefined) options = opts[1];
 		if (options) leading = options.leading;
-
-
-		if (opts.length >= 2) options = opts[1];
 
 		return function (...args: any[]) {
 			return createDebounce(debounceTime, leading, ...args);
