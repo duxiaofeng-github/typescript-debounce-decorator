@@ -1,106 +1,118 @@
-import {debounce} from "./index";
-import test from 'ava';
+import { cancel, debounce } from "./index";
+import test from "ava";
 
-const resolveTime = 5000;
-const debounceTime = 1000;
-
-test('test debounce with default 500 millisecond interval', async (t) => {
+test("test debounce with default 500 millisecond interval", async t => {
 	async function debounceWithDefault() {
 		let triggerTimes = 0;
 
 		class Foo {
-
 			@debounce
 			static bar() {
-				triggerTimes+=1;
+				triggerTimes += 1;
 			}
-
 		}
 
-		return new Promise((resolve, reject) => {
-			setInterval(() => {
-				Foo.bar();
-			}, 1);
+		setInterval(() => {
+			Foo.bar();
+		}, 1);
 
+		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				resolve(triggerTimes);
-			}, resolveTime);
+			}, 500);
 		});
 	}
 
-	t.is(await debounceWithDefault(), resolveTime / 500);
+	t.is(await debounceWithDefault(), 1);
 });
 
-test('test debounce with time', async (t) => {
+test("test debounce with time", async t => {
 	async function debounceWithTime() {
 		let triggerTimes = 0;
 
 		class Foo {
-
-			@debounce(debounceTime)
+			@debounce(1000)
 			static bar() {
-				triggerTimes+=1;
+				triggerTimes += 1;
 			}
-
 		}
 
-		return new Promise((resolve, reject) => {
-			setInterval(() => {
-				Foo.bar();
-			}, 1);
+		setInterval(() => {
+			Foo.bar();
+		}, 1);
 
+		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				resolve(triggerTimes);
-			}, resolveTime);
+			}, 1000);
 		});
 	}
 
-	t.is(await debounceWithTime(), resolveTime / debounceTime);
+	t.is(await debounceWithTime(), 1);
 });
 
-test('test debounce with true leading', async (t) => {
-	let trueLeadingTriggerTimes = 0;
+test("test debounce with true leading", async t => {
+	let triggerTimes = 0;
 
-	async function debounceWithTrueLeading() {
-		class Foo {
-
-			@debounce(debounceTime, {leading: true})
-			static bar() {
-				trueLeadingTriggerTimes+=1;
-			}
-
+	class Foo {
+		@debounce({ leading: true })
+		static bar() {
+			triggerTimes += 1;
 		}
-
-		Foo.bar();
 	}
 
-	debounceWithTrueLeading();
+	Foo.bar();
 
-	t.is(trueLeadingTriggerTimes, 1);
+	t.is(triggerTimes, 1);
 });
 
-test('test debounce with false leading', async (t) => {
-	let falseLeadingTriggerTimes = 0;
-
+test("test debounce with false leading", async t => {
 	async function debounceWithFalseLeading() {
+		let triggerTimes = 0;
+
 		class Foo {
-
-			@debounce(debounceTime, {leading: false})
+			@debounce({ leading: false })
 			static bar() {
-				falseLeadingTriggerTimes+=1;
+				triggerTimes += 1;
 			}
-
 		}
 
 		Foo.bar();
+
+		return new Promise((resolve, reject) => {
+			resolve(triggerTimes);
+		});
 	}
 
-	debounceWithFalseLeading();
-
-	t.is(falseLeadingTriggerTimes, 0);
+	t.is(await debounceWithFalseLeading(), 0);
 });
 
-test('test debounce with property method', (t) => {
+test("test debounce with false leading as multi-times trigger", async t => {
+	async function debounceWithMultiTimesTrigger() {
+		let triggerTimes = 0;
+
+		class Foo {
+			@debounce({ leading: false })
+			static bar() {
+				triggerTimes += 1;
+			}
+		}
+
+		setInterval(() => {
+			Foo.bar();
+		}, 1);
+
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve(triggerTimes);
+			}, 1000);
+		});
+	}
+
+	t.is(await debounceWithMultiTimesTrigger(), 1);
+});
+
+test("test debounce with property method", t => {
 	function debounceWithPropertyMethod() {
 		class Foo {
 			selfPointer: any;
@@ -110,7 +122,7 @@ test('test debounce with property method', (t) => {
 			bar = () => {
 				this.selfPointer = this;
 				this.triggerTime += 1;
-			}
+			};
 		}
 
 		const foo = new Foo();
@@ -123,4 +135,28 @@ test('test debounce with property method', (t) => {
 
 	t.truthy(foo.selfPointer === foo);
 	t.is(foo.triggerTime, 1);
+});
+
+test("test debounce cancellation", async t => {
+	async function debounceWithCancellation() {
+		let triggerTimes = 0;
+
+		class Foo {
+			@debounce({ leading: false })
+			static bar() {
+				triggerTimes += 1;
+			}
+		}
+
+		Foo.bar();
+		cancel(Foo.bar);
+
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve(triggerTimes);
+			}, 600);
+		});
+	}
+
+	t.is(await debounceWithCancellation(), 0);
 });
