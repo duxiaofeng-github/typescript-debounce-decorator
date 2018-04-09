@@ -87,6 +87,37 @@ test("test debounce with false leading", async t => {
 	t.is(await debounceWithFalseLeading(), 0);
 });
 
+test("test debounce with true leading as multi-times trigger", async t => {
+	async function debounceWithMultiTimesTrigger() {
+		let triggerTimes = 0;
+
+		class Foo {
+			@debounce
+			static bar() {
+				triggerTimes += 1;
+			}
+		}
+
+		let callTimes = 0;
+		const timer = setInterval(() => {
+			if (callTimes < 100) {
+				Foo.bar();
+				callTimes += 1;
+			} else {
+				clearInterval(timer);
+			}
+		}, 10);
+
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve(triggerTimes);
+			}, 500 * 2 + 100);
+		});
+	}
+
+	t.is(await debounceWithMultiTimesTrigger(), 1);
+});
+
 test("test debounce with false leading as multi-times trigger", async t => {
 	async function debounceWithMultiTimesTrigger() {
 		let triggerTimes = 0;
@@ -98,14 +129,20 @@ test("test debounce with false leading as multi-times trigger", async t => {
 			}
 		}
 
-		setInterval(() => {
-			Foo.bar();
-		}, 1);
+		let callTimes = 0;
+		const timer = setInterval(() => {
+			if (callTimes < 100) {
+				Foo.bar();
+				callTimes += 1;
+			} else {
+				clearInterval(timer);
+			}
+		}, 10);
 
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				resolve(triggerTimes);
-			}, 1000);
+			}, 1000 + 500 + 100);
 		});
 	}
 

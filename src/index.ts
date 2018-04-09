@@ -22,7 +22,13 @@ function getWrapper(
 
 			rewriteFunc.timer = setTimeout(() => {
 				if (!leading) originalMethod.apply(this, rewriteFunc.lastArgs);
-				clearTimeout(rewriteFunc.timer);
+				rewriteFunc.timer = undefined;
+			}, debounceTime);
+		} else {
+			clearTimeout(rewriteFunc.timer);
+
+			rewriteFunc.timer = setTimeout(() => {
+				if (!leading) originalMethod.apply(this, rewriteFunc.lastArgs);
 				rewriteFunc.timer = undefined;
 			}, debounceTime);
 		}

@@ -1,1 +1,108 @@
-"use strict";function cancel(e){clearTimeout(e.timer)}function getWrapper(e,r,t){var o=function(){for(var n=this,i=[],c=0;c<arguments.length;c++)i[c]=arguments[c];o.lastArgs=i,o.timer||(r&&t.apply(this,o.lastArgs),o.timer=setTimeout(function(){r||t.apply(n,o.lastArgs),clearTimeout(o.timer),o.timer=void 0},e))};return o}function defineProperty(e,r,t,o){var n;Object.defineProperty(t,o,{configurable:!0,enumerable:!1,get:function(){return n},set:function(t){n=getWrapper(e,r,t)}})}function modifyDescriptor(e,r,t){var o=t.value;return t.value=getWrapper(e,r,o),t}function createDebounce(e,r){for(var t=[],o=2;o<arguments.length;o++)t[o-2]=arguments[o];if(0===t.length)throw new Error("function applied debounce decorator should be a method");if(1===t.length)throw new Error("method applied debounce decorator should have valid name");var n=t[0],i=t[1],c=3===t.length&&t[2]?t[2]:Object.getOwnPropertyDescriptor(n,i);if(c)return modifyDescriptor(e,r,c);defineProperty(e,r,n,i)}function debounce(){for(var e=[],r=0;r<arguments.length;r++)e[r]=arguments[r];var t=500,o=!0;if(e.length&&("number"==typeof e[0]||"object"==typeof e[0]&&void 0!==e[0].leading)){"number"==typeof e[0]&&(t=e[0]);var n=void 0;return"object"==typeof e[0]&&void 0!==e[0].leading&&(n=e[0]),e.length>1&&"object"==typeof e[1]&&void 0!==e[1].leading&&(n=e[1]),n&&(o=n.leading),function(){for(var e=[],r=0;r<arguments.length;r++)e[r]=arguments[r];return createDebounce.apply(void 0,[t,o].concat(e))}}return createDebounce.apply(void 0,[t,o].concat(e))}Object.defineProperty(exports,"__esModule",{value:!0}),exports.cancel=cancel,exports.debounce=debounce;
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function cancel(func) {
+    clearTimeout(func.timer);
+}
+function getWrapper(debounceTime, leading, originalMethod) {
+    var rewriteFunc = function () {
+        var _this = this;
+        var rewriteArgs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            rewriteArgs[_i] = arguments[_i];
+        }
+        rewriteFunc.lastArgs = rewriteArgs;
+        if (!rewriteFunc.timer) {
+            if (leading)
+                originalMethod.apply(this, rewriteFunc.lastArgs);
+            rewriteFunc.timer = setTimeout(function () {
+                if (!leading)
+                    originalMethod.apply(_this, rewriteFunc.lastArgs);
+                rewriteFunc.timer = undefined;
+            }, debounceTime);
+        }
+        else {
+            clearTimeout(rewriteFunc.timer);
+            rewriteFunc.timer = setTimeout(function () {
+                if (!leading)
+                    originalMethod.apply(_this, rewriteFunc.lastArgs);
+                rewriteFunc.timer = undefined;
+            }, debounceTime);
+        }
+    };
+    return rewriteFunc;
+}
+function defineProperty(debounceTime, leading, target, name) {
+    var wrapperFunc;
+    Object.defineProperty(target, name, {
+        configurable: true,
+        enumerable: false,
+        get: function () {
+            return wrapperFunc;
+        },
+        set: function (value) {
+            wrapperFunc = getWrapper(debounceTime, leading, value);
+        }
+    });
+}
+function modifyDescriptor(debounceTime, leading, descriptor) {
+    var originalMethod = descriptor.value;
+    descriptor.value = getWrapper(debounceTime, leading, originalMethod);
+    return descriptor;
+}
+function createDebounce(debounceTime, leading) {
+    var args = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args[_i - 2] = arguments[_i];
+    }
+    if (args.length === 0)
+        throw new Error("function applied debounce decorator should be a method");
+    if (args.length === 1)
+        throw new Error("method applied debounce decorator should have valid name");
+    var target = args[0], name = args[1];
+    var descriptor = args.length === 3 && args[2]
+        ? args[2]
+        : Object.getOwnPropertyDescriptor(target, name);
+    if (descriptor) {
+        return modifyDescriptor(debounceTime, leading, descriptor);
+    }
+    else {
+        // property method has no descriptor to return;
+        defineProperty(debounceTime, leading, target, name);
+    }
+}
+function debounce() {
+    var opts = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        opts[_i] = arguments[_i];
+    }
+    var debounceTime = 500;
+    var leading = true;
+    if (opts.length &&
+        (typeof opts[0] === "number" ||
+            (typeof opts[0] === "object" && opts[0].leading !== undefined))) {
+        if (typeof opts[0] === "number")
+            debounceTime = opts[0];
+        var options = void 0;
+        if (typeof opts[0] === "object" && opts[0].leading !== undefined)
+            options = opts[0];
+        if (opts.length > 1 &&
+            typeof opts[1] === "object" &&
+            opts[1].leading !== undefined)
+            options = opts[1];
+        if (options)
+            leading = options.leading;
+        return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return createDebounce.apply(void 0, [debounceTime, leading].concat(args));
+        };
+    }
+    return createDebounce.apply(void 0, [debounceTime, leading].concat(opts));
+}
+
+exports.cancel = cancel;
+exports.debounce = debounce;

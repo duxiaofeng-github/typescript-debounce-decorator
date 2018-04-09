@@ -60,6 +60,7 @@ typings/
 .env
 
 rollup.config.js
+rollup.min-config.js
 tsconfig.json
 .editorconfig
 .gitignore
