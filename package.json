@@ -1,6 +1,6 @@
 {
   "name": "typescript-debounce-decorator",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A debounce decorator for typescript class method",
   "repository": {
     "type": "git",
