@@ -1,38 +1,55 @@
-interface IRewriteFunc {
-	(...rewriteArgs): void;
+interface IRewriteFuncOption {
 	timer: number;
 	lastArgs: any[];
-	cancel: () => void;
+}
+
+interface IRewriteFunc {
+	(...rewriteArgs): void;
+	options: IRewriteFuncOption;
 }
 
 export function cancel(func: IRewriteFunc) {
-	clearTimeout(func.timer);
+	if (func && func.options) {
+		clearTimeout(func.options.timer);
+	}
 }
 
 function getWrapper(
 	debounceTime: number,
 	leading: boolean,
-	originalMethod: Function
+	originalMethod: Function,
+	that?: Function
 ) {
-	const rewriteFunc = <IRewriteFunc>function(...rewriteArgs) {
-		rewriteFunc.lastArgs = rewriteArgs;
+	const options: IRewriteFuncOption = {
+		timer: undefined,
+		lastArgs: []
+	};
 
-		if (!rewriteFunc.timer) {
-			if (leading) originalMethod.apply(this, rewriteFunc.lastArgs);
+	let rewriteFunc = <IRewriteFunc>function(...rewriteArgs) {
+		options.lastArgs = rewriteArgs;
 
-			rewriteFunc.timer = setTimeout(() => {
-				if (!leading) originalMethod.apply(this, rewriteFunc.lastArgs);
-				rewriteFunc.timer = undefined;
+		if (!options.timer) {
+			if (leading) originalMethod.apply(this, options.lastArgs);
+
+			options.timer = setTimeout(() => {
+				if (!leading) originalMethod.apply(this, options.lastArgs);
+				options.timer = undefined;
 			}, debounceTime);
 		} else {
-			clearTimeout(rewriteFunc.timer);
+			clearTimeout(options.timer);
 
-			rewriteFunc.timer = setTimeout(() => {
-				if (!leading) originalMethod.apply(this, rewriteFunc.lastArgs);
-				rewriteFunc.timer = undefined;
+			options.timer = setTimeout(() => {
+				if (!leading) originalMethod.apply(this, options.lastArgs);
+				options.timer = undefined;
 			}, debounceTime);
 		}
 	};
+
+	if (that) {
+		rewriteFunc = rewriteFunc.bind(that);
+	}
+
+	rewriteFunc.options = options;
 
 	return rewriteFunc;
 }
@@ -52,7 +69,7 @@ function defineProperty(
 			return wrapperFunc;
 		},
 		set(value) {
-			wrapperFunc = getWrapper(debounceTime, leading, value);
+			wrapperFunc = getWrapper(debounceTime, leading, value, this);
 		}
 	});
 }

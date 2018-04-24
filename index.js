@@ -3,34 +3,44 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 function cancel(func) {
-    clearTimeout(func.timer);
+    if (func && func.options) {
+        clearTimeout(func.options.timer);
+    }
 }
-function getWrapper(debounceTime, leading, originalMethod) {
+function getWrapper(debounceTime, leading, originalMethod, that) {
+    var options = {
+        timer: undefined,
+        lastArgs: []
+    };
     var rewriteFunc = function () {
         var _this = this;
         var rewriteArgs = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             rewriteArgs[_i] = arguments[_i];
         }
-        rewriteFunc.lastArgs = rewriteArgs;
-        if (!rewriteFunc.timer) {
+        options.lastArgs = rewriteArgs;
+        if (!options.timer) {
             if (leading)
-                originalMethod.apply(this, rewriteFunc.lastArgs);
-            rewriteFunc.timer = setTimeout(function () {
+                originalMethod.apply(this, options.lastArgs);
+            options.timer = setTimeout(function () {
                 if (!leading)
-                    originalMethod.apply(_this, rewriteFunc.lastArgs);
-                rewriteFunc.timer = undefined;
+                    originalMethod.apply(_this, options.lastArgs);
+                options.timer = undefined;
             }, debounceTime);
         }
         else {
-            clearTimeout(rewriteFunc.timer);
-            rewriteFunc.timer = setTimeout(function () {
+            clearTimeout(options.timer);
+            options.timer = setTimeout(function () {
                 if (!leading)
-                    originalMethod.apply(_this, rewriteFunc.lastArgs);
-                rewriteFunc.timer = undefined;
+                    originalMethod.apply(_this, options.lastArgs);
+                options.timer = undefined;
             }, debounceTime);
         }
     };
+    if (that) {
+        rewriteFunc = rewriteFunc.bind(that);
+    }
+    rewriteFunc.options = options;
     return rewriteFunc;
 }
 function defineProperty(debounceTime, leading, target, name) {
@@ -42,7 +52,7 @@ function defineProperty(debounceTime, leading, target, name) {
             return wrapperFunc;
         },
         set: function (value) {
-            wrapperFunc = getWrapper(debounceTime, leading, value);
+            wrapperFunc = getWrapper(debounceTime, leading, value, this);
         }
     });
 }

@@ -149,6 +149,31 @@ test("test debounce with false leading as multi-times trigger", async t => {
 	t.is(await debounceWithMultiTimesTrigger(), 1);
 });
 
+test("test debounce with method", t => {
+	function debounceWithPropertyMethod() {
+		class Foo {
+			selfPointer: any;
+			triggerTime: number = 0;
+
+			@debounce
+			bar() {
+				this.selfPointer = this;
+				this.triggerTime += 1;
+			}
+		}
+
+		const foo = new Foo();
+		foo.bar();
+
+		return foo;
+	}
+
+	const foo = debounceWithPropertyMethod();
+
+	t.truthy(foo.selfPointer === foo);
+	t.is(foo.triggerTime, 1);
+});
+
 test("test debounce with property method", t => {
 	function debounceWithPropertyMethod() {
 		class Foo {
@@ -186,7 +211,38 @@ test("test debounce cancellation", async t => {
 		}
 
 		Foo.bar();
-		cancel(Foo.bar);
+
+		setTimeout(() => {
+			cancel(Foo.bar);
+		}, 400);
+
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve(triggerTimes);
+			}, 600);
+		});
+	}
+
+	t.is(await debounceWithCancellation(), 0);
+});
+
+test("test debounce cancellation with property method", async t => {
+	async function debounceWithCancellation() {
+		let triggerTimes = 0;
+
+		class Foo {
+			@debounce({ leading: false })
+			bar = () => {
+				triggerTimes += 1;
+			};
+		}
+
+		const foo = new Foo();
+		foo.bar();
+
+		setTimeout(() => {
+			cancel(foo.bar);
+		}, 400);
 
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
