@@ -7,57 +7,63 @@ function cancel(func) {
         clearTimeout(func.options.timer);
     }
 }
+function getNewName(name) {
+    var newName = name;
+    try {
+        newName = window.btoa(newName);
+    }
+    catch (_a) { }
+    newName = "typescript-debounce-decorator-" + newName;
+    return newName;
+}
 function getWrapper(debounceTime, leading, originalMethod, that) {
-    var options = {
-        timer: undefined,
-        lastArgs: []
-    };
     var rewriteFunc = function () {
         var _this = this;
         var rewriteArgs = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             rewriteArgs[_i] = arguments[_i];
         }
-        options.lastArgs = rewriteArgs;
-        if (!options.timer) {
+        this.lastArgs = rewriteArgs;
+        if (!this.timer) {
             if (leading)
-                originalMethod.apply(this, options.lastArgs);
-            options.timer = setTimeout(function () {
+                originalMethod.apply(this, this.lastArgs);
+            this.timer = setTimeout(function () {
                 if (!leading)
-                    originalMethod.apply(_this, options.lastArgs);
-                options.timer = undefined;
+                    originalMethod.apply(_this, _this.lastArgs);
+                _this.timer = undefined;
             }, debounceTime);
         }
         else {
-            clearTimeout(options.timer);
-            options.timer = setTimeout(function () {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(function () {
                 if (!leading)
-                    originalMethod.apply(_this, options.lastArgs);
-                options.timer = undefined;
+                    originalMethod.apply(_this, _this.lastArgs);
+                _this.timer = undefined;
             }, debounceTime);
         }
     };
     if (that) {
         rewriteFunc = rewriteFunc.bind(that);
     }
-    rewriteFunc.options = options;
     return rewriteFunc;
 }
 function defineProperty(debounceTime, leading, target, name) {
-    var wrapperFunc;
+    var newName = getNewName(name);
     Object.defineProperty(target, name, {
         configurable: true,
         enumerable: false,
         get: function () {
-            return wrapperFunc;
+            return this[newName];
         },
         set: function (value) {
-            wrapperFunc = getWrapper(debounceTime, leading, value, this);
+            this[newName] = getWrapper(debounceTime, leading, value, this);
         }
     });
 }
-function modifyDescriptor(debounceTime, leading, descriptor) {
+function modifyDescriptor(debounceTime, leading, descriptor, name) {
     var originalMethod = descriptor.value;
+    // const newName = getNewName(name);
+    // console.log(originalMethod);
     descriptor.value = getWrapper(debounceTime, leading, originalMethod);
     return descriptor;
 }
@@ -75,7 +81,7 @@ function createDebounce(debounceTime, leading) {
         ? args[2]
         : Object.getOwnPropertyDescriptor(target, name);
     if (descriptor) {
-        return modifyDescriptor(debounceTime, leading, descriptor);
+        return modifyDescriptor(debounceTime, leading, descriptor, name);
     }
     else {
         // property method has no descriptor to return;

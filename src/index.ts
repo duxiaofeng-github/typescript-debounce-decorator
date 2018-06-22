@@ -1,17 +1,19 @@
-interface IRewriteFuncOption {
-	timer: number;
-	lastArgs: any[];
-}
-
-interface IRewriteFunc {
-	(...rewriteArgs): void;
-	options: IRewriteFuncOption;
-}
-
 export function cancel(func: IRewriteFunc) {
 	if (func && func.options) {
 		clearTimeout(func.options.timer);
 	}
+}
+
+function getNewName(name: string) {
+	let newName = name;
+
+	try {
+		newName = window.btoa(newName);
+	} catch {}
+
+	newName = "typescript-debounce-decorator-" + newName;
+
+	return newName;
 }
 
 function getWrapper(
@@ -20,27 +22,23 @@ function getWrapper(
 	originalMethod: Function,
 	that?: Function
 ) {
-	const options: IRewriteFuncOption = {
-		timer: undefined,
-		lastArgs: []
-	};
+	let rewriteFunc = function(...rewriteArgs) {
+		this.typescript-debounce-decorator-
+		this.lastArgs = rewriteArgs;
 
-	let rewriteFunc = <IRewriteFunc>function(...rewriteArgs) {
-		options.lastArgs = rewriteArgs;
+		if (!this.timer) {
+			if (leading) originalMethod.apply(this, this.lastArgs);
 
-		if (!options.timer) {
-			if (leading) originalMethod.apply(this, options.lastArgs);
-
-			options.timer = setTimeout(() => {
-				if (!leading) originalMethod.apply(this, options.lastArgs);
-				options.timer = undefined;
+			this.timer = setTimeout(() => {
+				if (!leading) originalMethod.apply(this, this.lastArgs);
+				this.timer = undefined;
 			}, debounceTime);
 		} else {
-			clearTimeout(options.timer);
+			clearTimeout(this.timer);
 
-			options.timer = setTimeout(() => {
-				if (!leading) originalMethod.apply(this, options.lastArgs);
-				options.timer = undefined;
+			this.timer = setTimeout(() => {
+				if (!leading) originalMethod.apply(this, this.lastArgs);
+				this.timer = undefined;
 			}, debounceTime);
 		}
 	};
@@ -48,8 +46,6 @@ function getWrapper(
 	if (that) {
 		rewriteFunc = rewriteFunc.bind(that);
 	}
-
-	rewriteFunc.options = options;
 
 	return rewriteFunc;
 }
@@ -60,16 +56,16 @@ function defineProperty(
 	target: any,
 	name: string
 ) {
-	let wrapperFunc;
+	const newName = getNewName(name);
 
 	Object.defineProperty(target, name, {
 		configurable: true,
 		enumerable: false,
 		get() {
-			return wrapperFunc;
+			return this[newName];
 		},
 		set(value) {
-			wrapperFunc = getWrapper(debounceTime, leading, value, this);
+			this[newName] = getWrapper(debounceTime, leading, value, this);
 		}
 	});
 }
@@ -77,10 +73,12 @@ function defineProperty(
 function modifyDescriptor(
 	debounceTime: number,
 	leading: boolean,
-	descriptor: PropertyDescriptor
-) {
+	descriptor: PropertyDescriptor,
+): PropertyDescriptor {
 	const originalMethod = descriptor.value;
+
 	descriptor.value = getWrapper(debounceTime, leading, originalMethod);
+
 	return descriptor;
 }
 

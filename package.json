@@ -4,17 +4,21 @@
 	"description": "A debounce decorator for typescript class method",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/duxiaofeng-github/typescript-debounce-decorator.git"
+		"url":
+			"git+https://github.com/duxiaofeng-github/typescript-debounce-decorator.git"
 	},
 	"bugs": {
-		"url": "https://github.com/duxiaofeng-github/typescript-debounce-decorator/issues"
+		"url":
+			"https://github.com/duxiaofeng-github/typescript-debounce-decorator/issues"
 	},
-	"homepage": "https://github.com/duxiaofeng-github/typescript-debounce-decorator#readme",
+	"homepage":
+		"https://github.com/duxiaofeng-github/typescript-debounce-decorator#readme",
 	"main": "index.min.js",
 	"scripts": {
-		"test": "./node_modules/.bin/tsc && ./node_modules/.bin/ava --verbose && rm -f test.js src/index.js",
-		"build": "rm -f index.js index.min.js && ./node_modules/.bin/rollup -c && ./node_modules/.bin/rollup -c rollup.min-config.js",
-		"pub": "npm version patch && npm publish"
+		"test": "npm run build && jest -c jest.json",
+		"build":
+			"rm -f index.js index.min.js && rollup -c && rollup -c rollup.min-config.js",
+		"pub": "npm run build && npm version patch && npm publish"
 	},
 	"keywords": [
 		"typescript",
