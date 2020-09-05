@@ -22,10 +22,10 @@ function getWrapper(
 ) {
 	const options: IRewriteFuncOption = {
 		timer: undefined,
-		lastArgs: []
+		lastArgs: [],
 	};
 
-	let rewriteFunc = <IRewriteFunc>function(...rewriteArgs) {
+	let rewriteFunc = <IRewriteFunc>function (...rewriteArgs) {
 		options.lastArgs = rewriteArgs;
 
 		if (!options.timer) {
@@ -70,7 +70,7 @@ function defineProperty(
 		},
 		set(value) {
 			wrapperFunc = getWrapper(debounceTime, leading, value, this);
-		}
+		},
 	});
 }
 
@@ -111,7 +111,7 @@ function createDebounce(
 
 export function debounce(...opts: any[]) {
 	let debounceTime = 500;
-	let leading = true;
+	let leading = false;
 
 	if (
 		opts.length &&
@@ -131,7 +131,7 @@ export function debounce(...opts: any[]) {
 			options = opts[1];
 		if (options) leading = options.leading;
 
-		return function(...args: any[]) {
+		return function (...args: any[]) {
 			return createDebounce(debounceTime, leading, ...args);
 		};
 	}

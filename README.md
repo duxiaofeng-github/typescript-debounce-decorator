@@ -6,9 +6,9 @@
 
 > A debounce decorator for typescript class method
 
-* Tiny (1KB after uglify compressed)
-* No dependency
-* Easy to use
+- Tiny (1KB after uglify compressed)
+- No dependency
+- Easy to use
 
 ## Install
 
@@ -26,9 +26,9 @@ Syntax:
 
 Params:
 
-* debounceTime: `number` Function execute interval in milliseconds.
-* options: `object` Options.
-  * leading: `boolean` Should function invoke on the leading or trailing of the wait timeout.
+- debounceTime: `number` Function execute interval in milliseconds.
+- options: `object` Options.
+  - leading: `boolean` Should function invoke on the leading or trailing of the wait timeout.
 
 > NOTE: Return value of function which applied debounce decorator will be eaten.
 
@@ -64,7 +64,7 @@ With options:
 import { debounce } from "typescript-debounce-decorator";
 
 class Foo {
-	@debounce(1000, { leading: false })
+	@debounce(1000, { leading: true })
 	bar() {
 		console.log("foobar");
 	}
@@ -77,7 +77,7 @@ Cancel:
 import { debounce, cancel } from "typescript-debounce-decorator";
 
 class Foo {
-	@debounce(1000, { leading: false })
+	@debounce(1000, { leading: true })
 	bar() {
 		console.log("foobar");
 	}
@@ -87,6 +87,10 @@ class Foo {
 	}
 }
 ```
+
+## Changelog
+
+- 0.0.18: **[BREAKCHANGE] leading option now default to false**
 
 # License
 

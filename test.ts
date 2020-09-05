@@ -1,7 +1,7 @@
 import { cancel, debounce } from "./index";
 import test from "ava";
 
-test("test debounce with default 500 millisecond interval", async t => {
+test("test debounce with default 500 millisecond interval", async (t) => {
 	async function debounceWithDefault() {
 		let triggerTimes = 0;
 
@@ -26,7 +26,7 @@ test("test debounce with default 500 millisecond interval", async t => {
 	t.is(await debounceWithDefault(), 1);
 });
 
-test("test debounce with time", async t => {
+test("test debounce with time", async (t) => {
 	async function debounceWithTime() {
 		let triggerTimes = 0;
 
@@ -51,7 +51,7 @@ test("test debounce with time", async t => {
 	t.is(await debounceWithTime(), 1);
 });
 
-test("test debounce with true leading", async t => {
+test("test debounce with true leading", async (t) => {
 	let triggerTimes = 0;
 
 	class Foo {
@@ -66,12 +66,12 @@ test("test debounce with true leading", async t => {
 	t.is(triggerTimes, 1);
 });
 
-test("test debounce with false leading", async t => {
+test("test debounce with false leading", async (t) => {
 	async function debounceWithFalseLeading() {
 		let triggerTimes = 0;
 
 		class Foo {
-			@debounce({ leading: false })
+			@debounce
 			static bar() {
 				triggerTimes += 1;
 			}
@@ -87,12 +87,12 @@ test("test debounce with false leading", async t => {
 	t.is(await debounceWithFalseLeading(), 0);
 });
 
-test("test debounce with true leading as multi-times trigger", async t => {
+test("test debounce with true leading as multi-times trigger", async (t) => {
 	async function debounceWithMultiTimesTrigger() {
 		let triggerTimes = 0;
 
 		class Foo {
-			@debounce
+			@debounce({ leading: true })
 			static bar() {
 				triggerTimes += 1;
 			}
@@ -118,12 +118,12 @@ test("test debounce with true leading as multi-times trigger", async t => {
 	t.is(await debounceWithMultiTimesTrigger(), 1);
 });
 
-test("test debounce with false leading as multi-times trigger", async t => {
+test("test debounce with false leading as multi-times trigger", async (t) => {
 	async function debounceWithMultiTimesTrigger() {
 		let triggerTimes = 0;
 
 		class Foo {
-			@debounce({ leading: false })
+			@debounce
 			static bar() {
 				triggerTimes += 1;
 			}
@@ -149,7 +149,7 @@ test("test debounce with false leading as multi-times trigger", async t => {
 	t.is(await debounceWithMultiTimesTrigger(), 1);
 });
 
-test("test debounce with method", t => {
+test("test debounce with method", (t) => {
 	function debounceWithPropertyMethod() {
 		class Foo {
 			selfPointer: any;
@@ -174,7 +174,7 @@ test("test debounce with method", t => {
 	t.is(foo.triggerTime, 1);
 });
 
-test("test debounce with property method", t => {
+test("test debounce with property method", (t) => {
 	function debounceWithPropertyMethod() {
 		class Foo {
 			selfPointer: any;
@@ -199,7 +199,7 @@ test("test debounce with property method", t => {
 	t.is(foo.triggerTime, 1);
 });
 
-test("test debounce cancellation", async t => {
+test("test debounce cancellation", async (t) => {
 	async function debounceWithCancellation() {
 		let triggerTimes = 0;
 
@@ -226,7 +226,7 @@ test("test debounce cancellation", async t => {
 	t.is(await debounceWithCancellation(), 0);
 });
 
-test("test debounce cancellation with property method", async t => {
+test("test debounce cancellation with property method", async (t) => {
 	async function debounceWithCancellation() {
 		let triggerTimes = 0;
 
