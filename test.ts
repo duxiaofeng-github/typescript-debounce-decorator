@@ -6,7 +6,7 @@ test("test debounce with default 500 millisecond interval", async (t) => {
 		let triggerTimes = 0;
 
 		class Foo {
-			@debounce
+			@debounce({ leading: true })
 			static bar() {
 				triggerTimes += 1;
 			}
@@ -31,7 +31,7 @@ test("test debounce with time", async (t) => {
 		let triggerTimes = 0;
 
 		class Foo {
-			@debounce(1000)
+			@debounce(1000, { leading: true })
 			static bar() {
 				triggerTimes += 1;
 			}
@@ -155,7 +155,7 @@ test("test debounce with method", (t) => {
 			selfPointer: any;
 			triggerTime: number = 0;
 
-			@debounce
+			@debounce({ leading: true })
 			bar() {
 				this.selfPointer = this;
 				this.triggerTime += 1;
@@ -180,7 +180,7 @@ test("test debounce with property method", (t) => {
 			selfPointer: any;
 			triggerTime: number = 0;
 
-			@debounce
+			@debounce({ leading: true })
 			bar = () => {
 				this.selfPointer = this;
 				this.triggerTime += 1;
