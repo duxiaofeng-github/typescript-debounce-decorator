@@ -90,7 +90,7 @@ class Foo {
 
 ## Changelog
 
-- 0.0.18: **[BREAKCHANGE] leading option now default to false**
+- 0.0.18: **[BREAKING CHANGE] leading option now default to false**
 
 # License
 
